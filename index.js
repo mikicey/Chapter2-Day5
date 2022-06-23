@@ -79,8 +79,7 @@ app.post("/postmyproject",(req,res)=>{
 
    
     client.query(`INSERT INTO public.projects("title", "startDate", "endDate", "stringDate", duration, description, img, "isNode", "isReact", "isJS", "isCSS")
-        VALUES ((${newData.title}), $$newData.startDate$$, $$newData.endDate$$, $$stringDate$$, $$duration$$, 
-            $$newData.description$$, $$imageUrl$$, ${isNode}, ${isReact}, ${isJS}, ${isCSS})`, (err,result)=>{
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`, [newData.title, newData.startDate, newData.endDate, stringDate, duration, newData.description, imageUrl, isNode,isReact,isJS,isCSS] , (err,result)=>{
             if(err) throw err;
             res.redirect("/"); })
 });
@@ -125,7 +124,6 @@ app.post("/editmyproject/:id",(req,res)=>{
     const duration = getDuration(req.body.startDate,req.body.endDate);
     const stringDate = getDateStringFormat(req.body.startDate) + '-' + getDateStringFormat(req.body.endDate);
 
-    console.log(duration,stringDate)
 
     const isNode = req.body.node ? true : false;
     const isReact = req.body.react ? true : false;
@@ -136,8 +134,8 @@ app.post("/editmyproject/:id",(req,res)=>{
 
 
     client.query(`UPDATE public.projects
-	SET title=$$updatedData.title$$, "startDate"=$$updatedData.startDate$$, "endDate"=$$updatedData.endDate$$, "stringDate"=$$stringDate$$, duration=$$duration$$, description=$$updatedData.description$$, img=$$imageUrl$$, "isNode"=${isNode}, "isReact"=${isReact}, "isJS"=${isJS}, "isCSS"=${isCSS}
-	WHERE id=${id}`, (err,result)=>{
+	SET title=$1, "startDate"=$2, "endDate"=$3, "stringDate"=$4, duration=$5, description=$6, img=$7, "isNode"=$8, "isReact"=$9, "isJS"=$10, "isCSS"=$11
+	WHERE id=$12`,[updatedData.title, updatedData.startDate, updatedData.endDate, stringDate, duration, updatedData.description, imageUrl, isNode,isReact,isJS,isCSS,id], (err,result)=>{
       if(err) throw err;
       res.redirect("/");
     });
