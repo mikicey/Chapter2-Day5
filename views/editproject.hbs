@@ -56,7 +56,7 @@
               <!-- Project Name -->
               <div class="mb-4" >
                   <label for="project-name" class="form-label mb-1">Project Name</label>
-                  <input type="text" class="form-control" id="project-name" name="title" value={{dataToEdit.title}}>
+                  <input type="text" class="form-control" id="project-name" name="title" value="{{dataToEdit.title}}">
               </div>
 
               <!-- Project Date -->
@@ -153,10 +153,10 @@
 
          });
       
-         document.querySelector("#node").checked = {{dataToEdit.isNode}};
-         document.querySelector("#js").checked = {{dataToEdit.isJS}};
-         document.querySelector("#react").checked = {{dataToEdit.isReact}} ;
-         document.querySelector("#css").checked = {{dataToEdit.isCSS}};
+         document.querySelector("#node").checked = {{dataToEdit.tech.isNode}};
+         document.querySelector("#js").checked = {{dataToEdit.tech.isJS}};
+         document.querySelector("#react").checked = {{dataToEdit.tech.isReact}} ;
+         document.querySelector("#css").checked = {{dataToEdit.tech.isCSS}};
 
 
     </script>

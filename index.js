@@ -26,7 +26,7 @@ app.get("/" , (req,res)=> {
     if(err) throw err;
    
     
-    client.query("SELECT * FROM public.projects", (err,result)=>{
+    client.query("SELECT * FROM public.projects ORDER BY id DESC", (err,result)=>{
         if(err) throw err;
 
         let data = result.rows;
@@ -65,21 +65,24 @@ app.post("/postmyproject",(req,res)=>{
 
     if(err) throw err;
     const newData = req.body;
-
+    
+    // Duration
     const duration = getDuration(req.body.startDate,req.body.endDate);
     const stringDate = getDateStringFormat(req.body.startDate) + '-' + getDateStringFormat(req.body.endDate);
 
-    const isNode = req.body.node ? true : false;
-    const isReact = req.body.react ? true : false;
-    const isJS = req.body.js ? true : false;
-    const isCSS = req.body.css ? true : false;
+    // Tech
+    const technologies = {
+        isNode: req.body.node ? true : false,
+        isReact: req.body.react ? true:false,
+        isJS : req.body.js ? true : false,
+        isCSS : req.body.css ? true : false
+    };
 
+    // Image
     const imageUrl = '/images/pexels-pixabay-220453.jpg';
 
-
-   
-    client.query(`INSERT INTO public.projects("title", "startDate", "endDate", "stringDate", duration, description, img, "isNode", "isReact", "isJS", "isCSS")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`, [newData.title, newData.startDate, newData.endDate, stringDate, duration, newData.description, imageUrl, isNode,isReact,isJS,isCSS] , (err,result)=>{
+    client.query(`INSERT INTO public.projects("title", "startDate", "endDate", "stringDate", duration, description, img, projectowner_id, tech)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [newData.title, newData.startDate, newData.endDate, stringDate, duration, newData.description, imageUrl, 4 , technologies] , (err,result)=>{
             if(err) throw err;
             res.redirect("/"); })
 });
@@ -121,24 +124,31 @@ app.post("/editmyproject/:id",(req,res)=>{
     const updatedData = req.body;
 
 
+    // Time related
     const duration = getDuration(req.body.startDate,req.body.endDate);
     const stringDate = getDateStringFormat(req.body.startDate) + '-' + getDateStringFormat(req.body.endDate);
 
 
-    const isNode = req.body.node ? true : false;
-    const isReact = req.body.react ? true : false;
-    const isJS = req.body.js ? true : false;
-    const isCSS = req.body.css ? true : false;
+    // Tech related
+    const technologies = {
+        isNode: req.body.node ? true : false,
+        isReact: req.body.react ? true:false,
+        isJS : req.body.js ? true : false,
+        isCSS : req.body.css ? true : false
+        };
+    
 
+    // Image Url
     const imageUrl = '/images/pexels-pixabay-220453.jpg';
 
 
     client.query(`UPDATE public.projects
-	SET title=$1, "startDate"=$2, "endDate"=$3, "stringDate"=$4, duration=$5, description=$6, img=$7, "isNode"=$8, "isReact"=$9, "isJS"=$10, "isCSS"=$11
-	WHERE id=$12`,[updatedData.title, updatedData.startDate, updatedData.endDate, stringDate, duration, updatedData.description, imageUrl, isNode,isReact,isJS,isCSS,id], (err,result)=>{
+	SET title=$1, "startDate"=$2, "endDate"=$3, "stringDate"=$4, duration=$5, description=$6, img=$7, tech=$8
+	WHERE id=$9`,[updatedData.title, updatedData.startDate, updatedData.endDate, stringDate, duration, updatedData.description, imageUrl, technologies,id], (err,result)=>{
       if(err) throw err;
       res.redirect("/");
     });
+
 
 })
 
